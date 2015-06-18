@@ -1,4 +1,5 @@
 <% (['development', 'production'] + [@environment]).uniq.each do |env| -%>
+
 <%= env %>:
   adapter: <%= @database[:adapter].to_s.inspect %>
   database: <%= @database[:database].to_s.inspect %>
@@ -7,11 +8,22 @@
   username: <%= @database[:username].to_s.inspect %>
   password: <%= @database[:password].to_s.inspect %>
   reconnect: <%= @database[:reconnect] ? 'true' : 'false' %>
-<% if @database[:pool] -%>
-  pool: <%= @database[:pool].to_i.inspect %>
-<% end -%>
 <% if @database[:port] -%>
   port: <%= @database[:port].to_i.inspect %>
 <% end -%>
 
+<% @db = @database[:additional_database] %>
+<% if @db -%>
+<%= "#{@db[:name]}_" if @db[:name] %><%= env %>:
+  adapter: <%= @db[:adapter].to_s.inspect %>
+  database: <%= @db[:database].to_s.inspect %>
+  encoding: utf8
+  host: <%= (@db[:host] || 'localhost').to_s.inspect %>
+  username: <%= @db[:username].to_s.inspect %>
+  password: <%= @db[:password].to_s.inspect %>
+  reconnect: <%= @db[:reconnect] ? 'true' : 'false' %>
+<% if @db[:port] -%>
+  port: <%= @db[:port].to_i.inspect %>
+<% end -%>
+<% end %>
 <% end %>
